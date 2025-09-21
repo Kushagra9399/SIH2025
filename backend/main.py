@@ -5,10 +5,17 @@ from fastapi import Body, HTTPException
 from pydantic import BaseModel
 import certifi
 import google.generativeai as genai
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
 
 app = FastAPI()
 
-genai.configure(api_key="AIzaSyCh1cSWoQi9Zy8Y7cgaiB97f0-CbV-PI2A")
+MONGO_URI = os.getenv("MONGO_URI")
+SECRET_KEY = os.getenv("GENAI_API")
+
+genai.configure(api_key=SECRET_KEY)
 
 model = genai.GenerativeModel("gemini-1.5-flash")
 
@@ -21,7 +28,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-connection_str = "mongodb+srv://kushagraprajapat9399_db_user:kush9399@cluster0.litbx4k.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+connection_str = MONGO_URI
 # MongoDB connection
 client = MongoClient(connection_str, tlsCAFile=certifi.where())
 db = client["Smart_Education"]
